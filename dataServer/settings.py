@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework_swagger'
     'imageCrawler.apps.ImagecrawlerConfig',
 ]
 
@@ -76,8 +78,12 @@ WSGI_APPLICATION = 'dataServer.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+      'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ssafy_django_web',  # DB name
+        'USER': 'test',  # DB account
+        'PASSWORD': 'test',  # DB account's password
+        'HOST': '13.124.43.16',  # DB address(IP)
+        'PORT': '3306',  # DB port(normally 3306)
     }
 }
 
