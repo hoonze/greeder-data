@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-0yg7q35%x4tl#ncxy9z-9k3q^xl=7xfx4$slji98(h5=gf^y)n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'ImagecrawlerConfig',
+    'imageCrawler.apps.ImagecrawlerConfig',
 ]
 
 MIDDLEWARE = [
