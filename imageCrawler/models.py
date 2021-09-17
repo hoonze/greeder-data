@@ -4,7 +4,10 @@ from django.db import models
 
 
 class Image(models.Model):
-    id = models.AutoField(db_column='id', primary_key=True)
     keyword = models.CharField(db_column='keyword', max_length=45)
     desc = models.CharField(db_column='desc', max_length=255)
     url = models.CharField(db_column='url', max_length=255)
+
+    class Meta:
+        managed = False
+        db_table = 'image'

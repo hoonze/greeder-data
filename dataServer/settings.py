@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from dataServer import my_settings
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,8 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
+# Database
+# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+DATABASES = my_settings.DATABASES
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-0yg7q35%x4tl#ncxy9z-9k3q^xl=7xfx4$slji98(h5=gf^y)n'
+SECRET_KEY = my_settings.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -70,21 +75,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'dataServer.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'greeder',  # DB name
-        'USER': 'ssafy',  # DB account
-        'PASSWORD': 'ssafy',  # DB account's password
-        'HOST': '127.0.0.1',  # DB address(IP)
-        'PORT': '3306',  # DB port(normally 3306)
-    }
-}
 
 
 # Password validation
