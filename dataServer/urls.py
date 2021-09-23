@@ -1,9 +1,9 @@
 
 from django.contrib import admin
 from django.urls import path, include
-from imageCrawler import urls
+from crawler import urls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('imageCrawler.urls')),
+    path('', include('crawler.urls')),
 ]
