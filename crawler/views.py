@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Image
 from .serializers import ImageSerializer
 from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
 import time
 from selenium import webdriver
@@ -17,17 +17,18 @@ class ImageViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = super().get_queryset()
-
         keyword = self.request.query_params.get('keyword', '')
+
+        if not keyword:
+            return qs
         eng_keyword = googletrans.Translator().translate(keyword, dest='en').text.lower()
-        if eng_keyword:
-            qs = qs.filter(keyword=eng_keyword)
+        qs = qs.filter(keyword=eng_keyword)
 
         # keyword에 해당하는 이미지가 없을경우 크롤링 후 DB에 저장
         if len(qs) == 0:
             crawler = Crawler()
             img_urls, img_desc = crawler.crawling(eng_keyword)
-            for i in range(20):
+            for i in range(len(img_urls)):
                 Image.objects.create(keyword=eng_keyword,
                                      desc=img_desc[i], url=img_urls[i])
             qs = qs.filter(keyword=eng_keyword)
@@ -72,11 +73,11 @@ class Crawler():
             temp = [img_desc]
             img_descs.append(temp)
             with urlopen(img_url) as f:
-                with open('C:/SSAFY/2학기/특화PJT/특화PJT/crawler/images/' + keyword + str(n) + '.jpg', 'wb') as h:  # 이미지 + 사진번호 .jpg
+                with open('C:/SSAFY/semester2/2ndPJT/특화PJT/crawler/images/' + keyword + str(n) + '.jpg', 'wb') as h:  # 이미지 + 사진번호 .jpg
                     img = f.read()  # 이미지 읽기
                     h.write(img)
             img_save_urls.append(
-                'C:/SSAFY/2학기/특화PJT/특화PJT/crawler/images/' + keyword + str(n) + '.jpg')
+                'C:/SSAFY/semester2/2ndPJT/특화PJT/crawler/images/' + keyword + str(n) + '.jpg')
             n += 1
             if n > 20:
                 break
@@ -88,7 +89,7 @@ class Crawler():
         options = webdriver.ChromeOptions()
         options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(
-            chrome_options=options,  executable_path=r'C:/SSAFY/2학기/특화PJT/특화PJT/crawler/chromedriver.exe')
+            chrome_options=options,  executable_path=r'C:/SSAFY/semester2/2ndPJT/특화PJT/crawler/chromedriver.exe')
 
         return driver
 
