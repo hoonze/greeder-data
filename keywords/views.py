@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 import pandas as pd
-from konlpy.tag import Kkma, Okt, Hannanum
+from konlpy.tag import Kkma
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import normalize
@@ -32,7 +32,7 @@ class Keyword_extraction():
         start = time.time()
 
         df_stopwords = pd.read_excel(
-            'C:/SSAFY/2학기/특화PJT/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
+            'C:/SSAFY/semester2/2ndPJT/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
 
         stopwords = df_stopwords['형태'].tolist()
 
