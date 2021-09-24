@@ -9,6 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from urllib.request import urlopen
 import googletrans
+import time
 
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -70,26 +71,24 @@ class Crawler():
                 continue
 
             img_url = img_urls[20]
-            temp = [img_desc]
-            img_descs.append(temp)
+            img_descs.append(img_desc)
             with urlopen(img_url) as f:
-                with open('C:/SSAFY/semester2/2ndPJT/특화PJT/crawler/images/' + keyword + str(n) + '.jpg', 'wb') as h:  # 이미지 + 사진번호 .jpg
+                # 이미지 + 사진번호 .jpg
+                with open('/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg', 'wb') as h:
                     img = f.read()  # 이미지 읽기
                     h.write(img)
             img_save_urls.append(
-                'C:/SSAFY/semester2/2ndPJT/특화PJT/crawler/images/' + keyword + str(n) + '.jpg')
+                '/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg')
             n += 1
             if n > 20:
                 break
-        print(img_save_urls)
-        print(img_descs)
         return img_save_urls, img_descs
 
     def driver_init(self):
         options = webdriver.ChromeOptions()
         options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(
-            chrome_options=options,  executable_path=r'C:/SSAFY/semester2/2ndPJT/특화PJT/crawler/chromedriver.exe')
+            chrome_options=options,  executable_path=r'/home/ubuntu/chromedriver.exe')
 
         return driver
 

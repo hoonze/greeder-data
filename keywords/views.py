@@ -16,7 +16,6 @@ import time
 def extraction(request):
     if request.method == 'POST':
         article = request.data['article']
-        kkma = Kkma()
 
         extraction = Keyword_extraction()
 
@@ -32,7 +31,7 @@ class Keyword_extraction():
         start = time.time()
 
         df_stopwords = pd.read_excel(
-            'C:/SSAFY/semester2/2ndPJT/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
+            '/home/ubuntu/data//stop_words.xlsx', engine='openpyxl')
 
         stopwords = df_stopwords['형태'].tolist()
 
@@ -43,7 +42,7 @@ class Keyword_extraction():
         # 문장별 키워드 추출
         keywords = self.get_keywords(nouns, 5)
 
-        print("수행 시간(초) : ", time.time() - start)
+        print("키워드 추출 시간(초) : ", time.time() - start)
         return keywords
 
     def tf_idf(self, sentences):
