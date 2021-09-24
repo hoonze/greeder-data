@@ -69,6 +69,7 @@ class Keyword_extraction():
 
         return idx_to_word, graph_word
 
+    # 키워드 추출 메서드(num = 추출할 갯수)
     def get_keywords(self, nouns, num):
         idx_to_word, graph_word = self.cv(nouns)
         ranks = self.get_ranks(graph_word)
@@ -83,6 +84,7 @@ class Keyword_extraction():
 
         return keywords
 
+    # Text Rank 알고리즘
     def get_ranks(self, graph, d=0.85):  # d = damping factor
         A = graph
         matrix_size = A.shape[0]
@@ -99,23 +101,23 @@ class Keyword_extraction():
         ranks = np.linalg.solve(A, B)  # 연립방적식 Ax = b
         return {idx: r[0] for idx, r in enumerate(ranks)}
 
+    # 문장별 구분 메서드
     def get_sentences(self, text):
         sentences = self.kkma.sentences(text)
         return sentences
 
-    def get_pos(self, sentences):
-        for sentence in sentences:
-            pos = self.kkma.pos(sentence)
-            print(pos)
-
+    # 명사 추출 메서드
     def get_nouns(self, sentences, stopwords):
         nouns = []
 
         for sentence in sentences:
             if sentence is not '':
+                # 품사정보 포함된 형태소 반환
                 pos = self.kkma.pos(sentence)
+
                 noun = []
                 for word in pos:
+                    # 일반 명사, 고유명사이고 불용어가 아닐 때 추가
                     if (word[1] == 'NNG' or word[1] == 'NNP') and word[0] not in stopwords:
                         noun.append(word[0])
 
