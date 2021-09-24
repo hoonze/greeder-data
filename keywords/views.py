@@ -31,18 +31,17 @@ class Keyword_extraction():
         start = time.time()
 
         df_stopwords = pd.read_excel(
-            '/home/ubuntu/data//stop_words.xlsx', engine='openpyxl')
+            'C:/SSAFY/semester2/2ndPJT/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
 
         stopwords = df_stopwords['형태'].tolist()
-
-        # 글을 문장별로 구분
+        # # 글을 문장별로 구분
         sentences = self.get_sentences(article)
         # 문장별 명사 추출
         nouns = self.get_nouns(sentences, stopwords)
         # 문장별 키워드 추출
         keywords = self.get_keywords(nouns, 5)
 
-        print("키워드 추출 시간(초) : ", time.time() - start)
+        print("총 시간 시간(초) : ", time.time() - start)
         return keywords
 
     def tf_idf(self, sentences):
