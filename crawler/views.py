@@ -10,6 +10,7 @@ from selenium.webdriver.common.keys import Keys
 from urllib.request import urlopen
 import googletrans
 import time
+from pathlib import Path
 
 
 class ImageViewSet(viewsets.ModelViewSet):
@@ -72,6 +73,7 @@ class Crawler():
 
             img_url = img_urls[20]
             img_descs.append(img_desc)
+            print("경로", Path.cwd())
             with urlopen(img_url) as f:
                 # 이미지 + 사진번호 .jpg
                 with open('/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg', 'wb') as h:
@@ -82,13 +84,20 @@ class Crawler():
             n += 1
             if n > 20:
                 break
+        driver.close()
         return img_save_urls, img_descs
 
     def driver_init(self):
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option("detach", True)
-        driver = webdriver.Chrome(
-            chrome_options=options,  executable_path=r'/home/ubuntu/chromedriver.exe')
+        # options = webdriver.ChromeOptions()
+        # options.add_experimental_option("detach", True)
+        # driver = webdriver.Chrome(
+        #     chrome_options=options,  executable_path=r'C:/SSAFY/semester2/특화PJT/greeder-data/chromedriver.exe')
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--window-size=1420,1080')
+        chrome_options.add_argument('--headless')
+        chrome_options.add_argument('--disable-gpu')
+        driver = webdriver.Chrome(chrome_options=chrome_options)
 
         return driver
 

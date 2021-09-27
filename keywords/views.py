@@ -1,6 +1,7 @@
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from pathlib import Path
 
 import pandas as pd
 from konlpy.tag import Kkma
@@ -8,9 +9,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import normalize
 import numpy as np
+
 import time
 # Create your views here.
-
 
 @api_view(['POST'])
 def extraction(request):
@@ -29,9 +30,9 @@ class Keyword_extraction():
 
     def extract_from_article(self, article):
         start = time.time()
-
+        print("경로", Path.cwd())
         df_stopwords = pd.read_excel(
-            'C:/SSAFY/semester2/2ndPJT/특화PJT/ai/stop_words.xlsx', engine='openpyxl')
+            Path.joinpath(Path.cwd(), "keywords", "files", 'stop_words.xlsx'), engine='openpyxl')
 
         stopwords = df_stopwords['형태'].tolist()
         # # 글을 문장별로 구분
