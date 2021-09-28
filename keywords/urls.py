@@ -3,7 +3,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from keywords import views
 
 urlpatterns = [
-    path('keywords/', views.extraction),
+    path('keyword_extraction', views.extraction),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

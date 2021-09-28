@@ -16,7 +16,7 @@ import time
 @api_view(['POST'])
 def extraction(request):
     if request.method == 'POST':
-        article = request.data['article']
+        article = request.data['writing']
 
         extraction = Keyword_extraction()
 
@@ -29,8 +29,6 @@ class Keyword_extraction():
         self.kkma = Kkma()
 
     def extract_from_article(self, article):
-        start = time.time()
-        print("경로", Path.cwd())
         df_stopwords = pd.read_excel(
             Path.joinpath(Path.cwd(), "keywords", "files", 'stop_words.xlsx'), engine='openpyxl')
 
@@ -42,7 +40,6 @@ class Keyword_extraction():
         # 문장별 키워드 추출
         keywords = self.get_keywords(nouns, 5)
 
-        print("총 시간 시간(초) : ", time.time() - start)
         return keywords
 
     def tf_idf(self, sentences):

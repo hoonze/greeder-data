@@ -73,12 +73,12 @@ class Crawler():
 
             img_url = img_urls[20]
             img_descs.append(img_desc)
-            print("경로", Path.cwd())
             with urlopen(img_url) as f:
                 # 이미지 + 사진번호 .jpg
                 with open('/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg', 'wb') as h:
                     img = f.read()  # 이미지 읽기
                     h.write(img)
+            # DB저장용 url
             img_save_urls.append(
                 '/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg')
             n += 1

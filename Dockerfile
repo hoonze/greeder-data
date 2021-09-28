@@ -29,6 +29,6 @@ RUN unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
 # set display port to avoid crash
 ENV DISPLAY=:99
 
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8998"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8998"]
 
 EXPOSE 8998
