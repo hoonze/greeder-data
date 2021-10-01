@@ -7,7 +7,7 @@ from rest_framework.response import Response
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from urllib.request import urlopen
+from urllib.request import urlopen, urlretrieve
 import googletrans
 import time
 from pathlib import Path
@@ -47,13 +47,13 @@ class Crawler():
 
         url = 'https://unsplash.com/s/photos/' + keyword
         # 페이지 로드를 위해 3초 대기
-        driver.implicitly_wait(3)
+        driver.implicitly_wait(10)
         driver.get(url)
 
         elem = driver.find_element_by_tag_name("body")
         for i in range(5):
             elem.send_keys(Keys.PAGE_DOWN)
-            time.sleep(0.4)
+            time.sleep(0.5)
 
         images = driver.find_elements_by_class_name("oCCRx")
         n = 1
@@ -73,19 +73,41 @@ class Crawler():
 
             img_url = img_urls[20]
             img_descs.append(img_desc)
-            with urlopen(img_url) as f:
-                # 이미지 + 사진번호 .jpg
-                with open('/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg', 'wb') as h:
-                    img = f.read()  # 이미지 읽기
-                    h.write(img)
+
+            self.img_resize(img_url, keyword, n)
+            # with urlopen(img_url) as f:
+            #     # 이미지 + 사진번호 .jpg
+            #     with open('C:/SSAFY/semester2/특화PJT/image/' + keyword + str(n) + '.jpg', 'wb') as h:
+            #         img = f.read()  # 이미지 읽기
+            #         h.write(img)
             # DB저장용 url
-            img_save_urls.append(
-                '/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg')
+            img_save_urls.append(keyword+str(n))
             n += 1
             if n > 20:
                 break
         driver.close()
         return img_save_urls, img_descs
+
+    def img_resize(self, img_url, keyword, n):
+        from PIL import Image, ImageOps
+        f = urlretrieve(img_url, "test.jpg")
+        im = Image.open("test.jpg")
+        # Target size parameters
+        width = 1920
+        height = 1080
+
+        # Resize input image while keeping aspect ratio
+        ratio = height / im.height
+        im = im.resize((int(im.width * ratio), height))
+
+        # Border parameters
+        fill_color = (0, 0, 0)
+        border_l = int((width - im.width) / 2)
+
+        # Approach #1: Use ImageOps.expand()
+        border_r = width - im.width - border_l
+        im_1 = ImageOps.expand(im, (border_l, 0, border_r, 0), fill_color)
+        im_1.save('/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg')
 
     def driver_init(self):
         # options = webdriver.ChromeOptions()
@@ -104,10 +126,3 @@ class Crawler():
 
     def crawling(self, keyword):
         return self.image_crawling(keyword)
-
-    # def get(self, request):
-    #     # 여러개의 객체를 serialization하기 위해 many = True로 설정
-    #     return self.list(request)
-
-    # def post(self, request):
-    #     return self.create(request)
