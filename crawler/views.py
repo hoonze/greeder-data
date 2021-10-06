@@ -38,24 +38,35 @@ class ImageViewSet(viewsets.ModelViewSet):
 
 
 class Crawler():
+
     def __init__(self) -> None:
         pass
 
     def image_crawling(self, keyword):
+        from PIL import Image
         driver = self.driver_init()
         # 한글 -> 영어 번역
 
         url = 'https://unsplash.com/s/photos/' + keyword
-        # 페이지 로드를 위해 3초 대기
-        driver.implicitly_wait(10)
+        # 페이지 로드를 위해 대기
+        driver.implicitly_wait(20)
         driver.get(url)
 
         elem = driver.find_element_by_tag_name("body")
-        for i in range(5):
+        for i in range(15):
             elem.send_keys(Keys.PAGE_DOWN)
-            time.sleep(0.5)
+            time.sleep(0.1)
 
+        # loar more photos 버튼 클릭
+        btns = driver.find_elements_by_class_name("Onk5k")
+        if len(btns) == 3 or len(btns) == 11:
+            btns[2].click()
+
+        for i in range(15):
+            elem.send_keys(Keys.PAGE_DOWN)
+            time.sleep(0.1)
         images = driver.find_elements_by_class_name("oCCRx")
+
         n = 1
         img_descs = []
         img_save_urls = []
@@ -71,15 +82,23 @@ class Crawler():
             if len(img_urls) < 1:
                 continue
 
-            img_url = img_urls[20]
+            img_url = img_urls[26]
             img_descs.append(img_desc)
 
-            self.img_resize(img_url, keyword, n)
-            # with urlopen(img_url) as f:
-            #     # 이미지 + 사진번호 .jpg
-            #     with open('C:/SSAFY/semester2/특화PJT/image/' + keyword + str(n) + '.jpg', 'wb') as h:
-            #         img = f.read()  # 이미지 읽기
-            #         h.write(img)
+            # 가로가 넓은 사진만 filtering
+            f = urlretrieve(img_url, "test.jpg")
+            tmp_img = Image.open("test.jpg")
+            if tmp_img.width < tmp_img.height:
+                continue
+
+            # 세로로 긴 이미지 resizing
+            # self.img_resize(img_url, keyword, n)
+
+            with urlopen(img_url) as f:
+                # 이미지 + 사진번호 .jpg
+                with open('/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg', 'wb') as h:
+                    img = f.read()  # 이미지 읽기
+                    h.write(img)
             # DB저장용 url
             img_save_urls.append(keyword+str(n))
             n += 1
@@ -88,6 +107,7 @@ class Crawler():
         driver.close()
         return img_save_urls, img_descs
 
+    # 세로로 긴 이미지 resizing method
     def img_resize(self, img_url, keyword, n):
         from PIL import Image, ImageOps
         f = urlretrieve(img_url, "test.jpg")
@@ -110,10 +130,13 @@ class Crawler():
         im_1.save('/home/ubuntu/images/keywords/' + keyword + str(n) + '.jpg')
 
     def driver_init(self):
+        # local용
         # options = webdriver.ChromeOptions()
         # options.add_experimental_option("detach", True)
         # driver = webdriver.Chrome(
         #     chrome_options=options,  executable_path=r'C:/SSAFY/semester2/특화PJT/greeder-data/chromedriver.exe')
+
+        # ubuntu 서버용
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--window-size=1420,1080')
