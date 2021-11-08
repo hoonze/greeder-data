@@ -1,5 +1,5 @@
 FROM python:3.6.8 
-
+ 
 COPY . .
 
 RUN apt-get update && \
